@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+html,
+body,
+#root {
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+}
+
+.h-screen-dynamic {
+  height: 100dvh;
+}

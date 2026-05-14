@@ -13,9 +13,7 @@ export function MobileLayout() {
             <div
               key={i}
               className={`flex-shrink-0 h-8 w-20 rounded-full border transition-colors ${
-                i === 0
-                  ? 'bg-earth-sand/30 border-earth-sage/50'
-                  : 'bg-white border-earth-stone/30'
+                i === 0 ? 'bg-earth-sand/30 border-earth-sage/50' : 'bg-white border-earth-stone/30'
               }`}
             />
           ))}

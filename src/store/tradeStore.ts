@@ -107,14 +107,14 @@ export const useTradeStore = create<TradeStore>()(
           const existingHolding = portfolio.find((h) => h.symbol === symbol);
           const newPortfolio = existingHolding
             ? portfolio.map((h) =>
-              h.symbol === symbol
-                ? {
-                  ...h,
-                  quantity: h.quantity + quantity,
-                  avgCost: (h.avgCost * h.quantity + total) / (h.quantity + quantity),
-                }
-                : h
-            )
+                h.symbol === symbol
+                  ? {
+                      ...h,
+                      quantity: h.quantity + quantity,
+                      avgCost: (h.avgCost * h.quantity + total) / (h.quantity + quantity),
+                    }
+                  : h
+              )
             : [...portfolio, { symbol, quantity, avgCost: stock.currentPrice }];
 
           set({
@@ -140,10 +140,8 @@ export const useTradeStore = create<TradeStore>()(
             existingHolding.quantity === quantity
               ? portfolio.filter((h) => h.symbol !== symbol)
               : portfolio.map((h) =>
-                h.symbol === symbol
-                  ? { ...h, quantity: h.quantity - quantity }
-                  : h
-              );
+                  h.symbol === symbol ? { ...h, quantity: h.quantity - quantity } : h
+                );
 
           set({
             portfolio: newPortfolio,
@@ -177,7 +175,8 @@ export const useTradeStore = create<TradeStore>()(
             ...stock,
             currentPrice: Math.round(newPrice * 100) / 100,
             change: Math.round((newPrice - stock.previousClose) * 100) / 100,
-            changePercent: Math.round(((newPrice - stock.previousClose) / stock.previousClose) * 10000) / 100,
+            changePercent:
+              Math.round(((newPrice - stock.previousClose) / stock.previousClose) * 10000) / 100,
             volume: stock.volume + Math.floor((Math.random() - 0.5) * stock.volume * 0.1),
           };
         });

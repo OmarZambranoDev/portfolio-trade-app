@@ -14,6 +14,7 @@ export default defineConfig({
       shared: {
         react: { singleton: true, requiredVersion: '18.2.0' },
         'react-dom': { singleton: true, requiredVersion: '18.2.0' },
+        'react/jsx-runtime': { singleton: true },
         '@OmarZambranoDev/portfolio-ui': { singleton: true },
         zustand: { singleton: true, version: '4.5.2' },
       },
