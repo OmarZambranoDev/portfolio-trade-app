@@ -41,7 +41,32 @@ export const useTradeStore = create<TradeStore>()(
         { symbol: 'TSLA', quantity: 3, avgCost: 220 },
       ],
       cashBalance: 25000,
-      tradeHistory: [],
+      tradeHistory: [
+        {
+          id: 'seed_aapl',
+          symbol: 'AAPL',
+          quantity: 10,
+          price: 150,
+          action: 'buy' as const,
+          timestamp: Date.now() - 86400000 * 5,
+        },
+        {
+          id: 'seed_msft',
+          symbol: 'MSFT',
+          quantity: 5,
+          price: 380,
+          action: 'buy' as const,
+          timestamp: Date.now() - 86400000 * 3,
+        },
+        {
+          id: 'seed_tsla',
+          symbol: 'TSLA',
+          quantity: 3,
+          price: 220,
+          action: 'buy' as const,
+          timestamp: Date.now() - 86400000 * 1,
+        },
+      ],
       dataLoaded: false,
       selectedStock: null,
 
@@ -107,14 +132,14 @@ export const useTradeStore = create<TradeStore>()(
           const existingHolding = portfolio.find((h) => h.symbol === symbol);
           const newPortfolio = existingHolding
             ? portfolio.map((h) =>
-                h.symbol === symbol
-                  ? {
-                      ...h,
-                      quantity: h.quantity + quantity,
-                      avgCost: (h.avgCost * h.quantity + total) / (h.quantity + quantity),
-                    }
-                  : h
-              )
+              h.symbol === symbol
+                ? {
+                  ...h,
+                  quantity: h.quantity + quantity,
+                  avgCost: (h.avgCost * h.quantity + total) / (h.quantity + quantity),
+                }
+                : h
+            )
             : [...portfolio, { symbol, quantity, avgCost: stock.currentPrice }];
 
           set({
@@ -140,8 +165,8 @@ export const useTradeStore = create<TradeStore>()(
             existingHolding.quantity === quantity
               ? portfolio.filter((h) => h.symbol !== symbol)
               : portfolio.map((h) =>
-                  h.symbol === symbol ? { ...h, quantity: h.quantity - quantity } : h
-                );
+                h.symbol === symbol ? { ...h, quantity: h.quantity - quantity } : h
+              );
 
           set({
             portfolio: newPortfolio,
@@ -190,6 +215,7 @@ export const useTradeStore = create<TradeStore>()(
         watchlist: state.watchlist,
         portfolio: state.portfolio,
         cashBalance: state.cashBalance,
+        tradeHistory: state.tradeHistory,
       }),
     }
   )

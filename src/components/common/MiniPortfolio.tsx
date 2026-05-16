@@ -1,3 +1,4 @@
+import { CardContent } from '@OmarZambranoDev/portfolio-ui';
 import { useTradeStore } from '../../store/tradeStore';
 import { ScrollArea } from './ScrollArea';
 
@@ -19,31 +20,30 @@ export function MiniPortfolio() {
   const isPositive = totalGain >= 0;
 
   return (
-    <div className="p-4 border-t border-earth-stone/30 bg-earth-stone/10 flex flex-col h-full">
-      <p className="text-xs font-semibold text-earth-forest uppercase tracking-wider mb-3 flex-shrink-0">
+    <CardContent className="flex flex-col flex-1 min-h-0 p-3 space-y-2">
+      <p className="text-xs font-semibold text-earth-forest uppercase tracking-wider flex-shrink-0">
         Portfolio
       </p>
 
-      <div className="space-y-2 mb-3 flex-shrink-0">
+      <div className="space-y-1 flex-shrink-0">
         <div className="flex justify-between items-center">
           <span className="text-sm text-earth-moss">Total Value</span>
           <span className="text-sm font-semibold text-earth-forest">
             ${totalValue.toFixed(2)}
           </span>
         </div>
-
         <div className="flex justify-between items-center">
           <span className="text-sm text-earth-moss">Cash Balance</span>
           <span className="text-sm font-medium text-earth-forest">
             ${cashBalance.toFixed(2)}
           </span>
         </div>
-
         <div className="flex justify-between items-center">
           <span className="text-sm text-earth-moss">Total P/L</span>
           <span
-            className={`text-sm font-semibold ${isPositive ? 'text-earth-forest' : 'text-danger'
-              }`}
+            className={`text-sm font-semibold ${
+              isPositive ? 'text-earth-forest' : 'text-danger'
+            }`}
           >
             {isPositive ? '+' : ''}
             ${totalGain.toFixed(2)} ({isPositive ? '+' : ''}
@@ -53,7 +53,7 @@ export function MiniPortfolio() {
       </div>
 
       {portfolio.length > 0 && (
-        <div className="pt-3 border-t border-earth-stone/20 flex-1 flex flex-col min-h-0">
+        <div className="pt-2 border-t border-earth-stone/20 flex-1 flex flex-col min-h-0">
           <p className="text-xs font-semibold text-earth-sage uppercase tracking-wider mb-2 flex-shrink-0">
             Positions
           </p>
@@ -72,7 +72,7 @@ export function MiniPortfolio() {
                 return (
                   <div
                     key={holding.symbol}
-                    className="bg-white rounded-lg border border-earth-stone/20 p-2.5"
+                    className="bg-white rounded-lg border border-earth-stone/20 p-2"
                   >
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-semibold text-earth-forest">
@@ -87,8 +87,9 @@ export function MiniPortfolio() {
                         {holding.quantity} shares
                       </span>
                       <span
-                        className={`text-xs font-medium ${gain >= 0 ? 'text-earth-forest' : 'text-danger'
-                          }`}
+                        className={`text-xs font-medium ${
+                          gain >= 0 ? 'text-earth-forest' : 'text-danger'
+                        }`}
                       >
                         {gain >= 0 ? '+' : ''}
                         {gainPercent.toFixed(2)}%
@@ -101,6 +102,6 @@ export function MiniPortfolio() {
           </ScrollArea>
         </div>
       )}
-    </div>
+    </CardContent>
   );
 }

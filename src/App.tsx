@@ -15,10 +15,7 @@ export default function App() {
 
   useEffect(() => {
     if (!dataLoaded) return;
-    const interval = setInterval(
-      () => updatePrices(),
-      1000 + Math.random() * 1000
-    );
+    const interval = setInterval(() => updatePrices(), 1000 + Math.random() * 1000);
     return () => clearInterval(interval);
   }, [dataLoaded, updatePrices]);
 
@@ -35,9 +32,7 @@ export default function App() {
 
   return (
     <ToastProvider>
-      <div className="h-full">
-        {isMobile ? <MobileLayout /> : <DesktopLayout />}
-      </div>
+      <div className="h-full">{isMobile ? <MobileLayout /> : <DesktopLayout />}</div>
     </ToastProvider>
   );
 }

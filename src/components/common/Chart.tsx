@@ -18,7 +18,7 @@ const TIMEFRAME_LABELS: Record<Timeframe, string> = {
   '1W': '1W',
   '1M': '1M',
   '3M': '3M',
-  'YTD': 'YTD',
+  YTD: 'YTD',
   '1Y': '1Y',
 };
 
@@ -96,6 +96,9 @@ export function Chart() {
     return () => {
       observer.disconnect();
       chart.remove();
+      chartRef.current = null;
+      lineSeriesRef.current = null;
+      candleSeriesRef.current = null;
     };
   }, []);
 
@@ -110,14 +113,24 @@ export function Chart() {
     const chart = chartRef.current;
     if (!chart) return;
 
-    if (lineSeriesRef.current) {
-      chart.removeSeries(lineSeriesRef.current);
-      lineSeriesRef.current = null;
+    // Safely remove existing series
+    try {
+      if (lineSeriesRef.current) {
+        chart.removeSeries(lineSeriesRef.current);
+      }
+    } catch {
+      // Series might already be removed
     }
-    if (candleSeriesRef.current) {
-      chart.removeSeries(candleSeriesRef.current);
-      candleSeriesRef.current = null;
+    lineSeriesRef.current = null;
+
+    try {
+      if (candleSeriesRef.current) {
+        chart.removeSeries(candleSeriesRef.current);
+      }
+    } catch {
+      // Series might already be removed
     }
+    candleSeriesRef.current = null;
 
     if (!selectedStock || !historical[selectedStock]) return;
 
@@ -190,9 +203,7 @@ export function Chart() {
             variant={chartType === 'candlestick' ? 'primary' : 'outline'}
             size="sm"
             onClick={() => setChartType('candlestick')}
-            className={
-              chartType === 'candlestick' ? '' : 'border-earth-stone/30 text-earth-moss'
-            }
+            className={chartType === 'candlestick' ? '' : 'border-earth-stone/30 text-earth-moss'}
           >
             <CandlestickChart className="w-4 h-4" />
           </Button>

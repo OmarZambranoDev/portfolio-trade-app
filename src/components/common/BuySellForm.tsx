@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Button, Modal, ModalContent, ModalHeader, ModalTitle, ModalBody, ModalFooter, ModalClose } from '@OmarZambranoDev/portfolio-ui';
+import {
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalTitle,
+  ModalBody,
+  ModalFooter,
+  ModalClose,
+} from '@OmarZambranoDev/portfolio-ui';
 import { useTradeStore } from '../../store/tradeStore';
 import { useToast } from '@OmarZambranoDev/portfolio-ui';
 
@@ -15,13 +24,12 @@ export function BuySellForm() {
   const total = stock ? stock.currentPrice * (parsedQuantity || 0) : 0;
   const isValidQuantity = parsedQuantity > 0;
 
-  const holding = selectedStock
-    ? portfolio.find((h) => h.symbol === selectedStock)
-    : null;
+  const holding = selectedStock ? portfolio.find((h) => h.symbol === selectedStock) : null;
   const holdingQuantity = holding?.quantity ?? 0;
 
   const canBuy = action === 'buy' && stock && isValidQuantity && total <= cashBalance;
-  const canSell = action === 'sell' && stock && isValidQuantity && parsedQuantity <= holdingQuantity;
+  const canSell =
+    action === 'sell' && stock && isValidQuantity && parsedQuantity <= holdingQuantity;
 
   const canSubmit = (action === 'buy' && canBuy) || (action === 'sell' && canSell);
 
@@ -119,9 +127,7 @@ export function BuySellForm() {
           </Button>
         </div>
 
-        <p className="text-xs text-earth-moss mt-2">
-          Cash available: ${cashBalance.toFixed(2)}
-        </p>
+        <p className="text-xs text-earth-moss mt-2">Cash available: ${cashBalance.toFixed(2)}</p>
       </div>
 
       <Modal open={showConfirm} onOpenChange={setShowConfirm}>
@@ -132,11 +138,10 @@ export function BuySellForm() {
           <ModalBody>
             <p className="text-earth-moss">
               {action === 'buy' ? 'Buy' : 'Sell'} <strong>{parsedQuantity}</strong> shares of{' '}
-              <strong>{selectedStock}</strong> at <strong>${stock.currentPrice.toFixed(2)}</strong> each?
+              <strong>{selectedStock}</strong> at <strong>${stock.currentPrice.toFixed(2)}</strong>{' '}
+              each?
             </p>
-            <p className="text-earth-forest font-semibold mt-2">
-              Total: ${total.toFixed(2)}
-            </p>
+            <p className="text-earth-forest font-semibold mt-2">Total: ${total.toFixed(2)}</p>
           </ModalBody>
           <ModalFooter>
             <ModalClose asChild>

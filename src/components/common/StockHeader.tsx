@@ -37,18 +37,14 @@ export function StockHeader() {
             <TrendingDown className="w-4 h-4 text-danger" />
           )}
           <span
-            className={`text-sm font-semibold ${
-              isPositive ? 'text-earth-forest' : 'text-danger'
-            }`}
+            className={`text-sm font-semibold ${isPositive ? 'text-earth-forest' : 'text-danger'}`}
           >
             {isPositive ? '+' : ''}
             {stock.change.toFixed(2)} ({isPositive ? '+' : ''}
             {stock.changePercent.toFixed(2)}%)
           </span>
         </div>
-        <span className="text-xs text-earth-moss">
-          Vol: {(stock.volume / 1000000).toFixed(1)}M
-        </span>
+        <span className="text-xs text-earth-moss">Vol: {(stock.volume / 1000000).toFixed(1)}M</span>
       </div>
     </div>
   );

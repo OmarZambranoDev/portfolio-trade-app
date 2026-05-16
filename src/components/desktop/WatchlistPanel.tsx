@@ -4,7 +4,11 @@ import { useState, useMemo } from 'react';
 import { useTradeStore } from '../../store/tradeStore';
 import { ScrollArea } from '../common/ScrollArea';
 
-export function WatchlistPanel() {
+interface WatchlistPanelProps {
+  onSelectStock: () => void;
+}
+
+export function WatchlistPanel({ onSelectStock }: WatchlistPanelProps) {
   const [search, setSearch] = useState('');
   const [showResults, setShowResults] = useState(false);
   const { watchlist, stocks, selectedStock, addToWatchlist, removeFromWatchlist, selectStock } =
@@ -17,8 +21,7 @@ export function WatchlistPanel() {
     return Object.keys(stocks)
       .filter(
         (sym) =>
-          sym.toLowerCase().includes(query) ||
-          stocks[sym].companyName.toLowerCase().includes(query)
+          sym.toLowerCase().includes(query) || stocks[sym].companyName.toLowerCase().includes(query)
       )
       .sort((a, b) => {
         const aStartsWith = a.toLowerCase().startsWith(query);
@@ -44,6 +47,7 @@ export function WatchlistPanel() {
       addToWatchlist(symbol);
     }
     selectStock(symbol);
+    onSelectStock();
     setSearch('');
     setShowResults(false);
   };
@@ -128,17 +132,19 @@ export function WatchlistPanel() {
                   <Card
                     key={symbol}
                     clickable
-                    onClick={() => selectStock(symbol)}
+                    onClick={() => {
+                      selectStock(symbol);
+                      onSelectStock();
+                    }}
                     variant={isSelected ? 'elevated' : 'outline'}
-                    className={`transition-colors ${
-                      isSelected
-                        ? 'border-earth-sage/50 bg-earth-sand/30'
-                        : 'border-earth-stone/30 hover:bg-earth-stone/20'
-                    }`}
+                    className={`transition-colors ${isSelected
+                      ? 'border-primary/50 bg-primary/10'
+                      : 'border-earth-stone/30 hover:bg-earth-stone/20'
+                      }`}
                   >
                     <CardContent className="flex items-center justify-between p-3">
                       <div className="min-w-0 flex-1">
-                        <p className="font-semibold text-earth-forest text-sm">{symbol}</p>
+                        <p className="font-semibold text-sm text-primary">{symbol}</p>
                         <p className="text-xs text-earth-moss truncate">{stock.companyName}</p>
                       </div>
                       <div className="text-right flex items-center gap-2 flex-shrink-0">
@@ -153,9 +159,8 @@ export function WatchlistPanel() {
                               <TrendingDown className="w-3 h-3 text-danger" />
                             )}
                             <p
-                              className={`text-xs font-medium ${
-                                isPositive ? 'text-earth-forest' : 'text-danger'
-                              }`}
+                              className={`text-xs font-medium ${isPositive ? 'text-earth-forest' : 'text-danger'
+                                }`}
                             >
                               {stock.changePercent > 0 ? '+' : ''}
                               {stock.changePercent.toFixed(2)}%
