@@ -34,35 +34,39 @@ export function PositionsTable({ onSelectStock, onCollapsedChange }: PositionsTa
   }, 0);
   const totalAccount = totalPortfolioValue + cashBalance;
 
-  const data: PositionRow[] = portfolio.map((holding) => {
-    const stock = stocks[holding.symbol];
-    if (!stock) return null;
-    const currentPrice = stock.currentPrice;
-    const previousClose = stock.previousClose;
-    const todayGain = (currentPrice - previousClose) * holding.quantity;
-    const todayGainPercent = previousClose > 0 ? ((currentPrice - previousClose) / previousClose) * 100 : 0;
-    const totalGain = (currentPrice - holding.avgCost) * holding.quantity;
-    const totalGainPercent = holding.avgCost > 0 ? ((currentPrice - holding.avgCost) / holding.avgCost) * 100 : 0;
-    const currentValue = currentPrice * holding.quantity;
-    const accountPercent = totalAccount > 0 ? (currentValue / totalAccount) * 100 : 0;
+  const data: PositionRow[] = portfolio
+    .map((holding) => {
+      const stock = stocks[holding.symbol];
+      if (!stock) return null;
+      const currentPrice = stock.currentPrice;
+      const previousClose = stock.previousClose;
+      const todayGain = (currentPrice - previousClose) * holding.quantity;
+      const todayGainPercent =
+        previousClose > 0 ? ((currentPrice - previousClose) / previousClose) * 100 : 0;
+      const totalGain = (currentPrice - holding.avgCost) * holding.quantity;
+      const totalGainPercent =
+        holding.avgCost > 0 ? ((currentPrice - holding.avgCost) / holding.avgCost) * 100 : 0;
+      const currentValue = currentPrice * holding.quantity;
+      const accountPercent = totalAccount > 0 ? (currentValue / totalAccount) * 100 : 0;
 
-    return {
-      symbol: holding.symbol,
-      companyName: stock.companyName,
-      lastPrice: currentPrice,
-      change: stock.change,
-      changePercent: stock.changePercent,
-      todayGain,
-      todayGainPercent,
-      totalGain,
-      totalGainPercent,
-      currentValue,
-      accountPercent,
-      quantity: holding.quantity,
-      avgCost: holding.avgCost,
-      costBasisTotal: holding.avgCost * holding.quantity,
-    };
-  }).filter(Boolean) as PositionRow[];
+      return {
+        symbol: holding.symbol,
+        companyName: stock.companyName,
+        lastPrice: currentPrice,
+        change: stock.change,
+        changePercent: stock.changePercent,
+        todayGain,
+        todayGainPercent,
+        totalGain,
+        totalGainPercent,
+        currentValue,
+        accountPercent,
+        quantity: holding.quantity,
+        avgCost: holding.avgCost,
+        costBasisTotal: holding.avgCost * holding.quantity,
+      };
+    })
+    .filter(Boolean) as PositionRow[];
 
   const columns: ColumnDef<PositionRow, unknown>[] = [
     {
@@ -98,7 +102,9 @@ export function PositionsTable({ onSelectStock, onCollapsedChange }: PositionsTa
               <TrendingDown className="w-3 h-3 text-danger" />
             )}
             <span className={`font-medium ${isPositive ? 'text-earth-forest' : 'text-danger'}`}>
-              {isPositive ? '+' : ''}{row.original.change.toFixed(2)} ({isPositive ? '+' : ''}{row.original.changePercent.toFixed(2)}%)
+              {isPositive ? '+' : ''}
+              {row.original.change.toFixed(2)} ({isPositive ? '+' : ''}
+              {row.original.changePercent.toFixed(2)}%)
             </span>
           </div>
         );
@@ -111,10 +117,15 @@ export function PositionsTable({ onSelectStock, onCollapsedChange }: PositionsTa
       cell: ({ row }) => {
         const isPositive = row.original.todayGain >= 0;
         return (
-          <div className={`text-right font-medium ${isPositive ? 'text-earth-forest' : 'text-danger'}`}>
+          <div
+            className={`text-right font-medium ${isPositive ? 'text-earth-forest' : 'text-danger'}`}
+          >
             {isPositive ? '+' : ''}${row.original.todayGain.toFixed(2)}
             <br />
-            <span className="text-xs">({isPositive ? '+' : ''}{row.original.todayGainPercent.toFixed(2)}%)</span>
+            <span className="text-xs">
+              ({isPositive ? '+' : ''}
+              {row.original.todayGainPercent.toFixed(2)}%)
+            </span>
           </div>
         );
       },
@@ -126,10 +137,15 @@ export function PositionsTable({ onSelectStock, onCollapsedChange }: PositionsTa
       cell: ({ row }) => {
         const isPositive = row.original.totalGain >= 0;
         return (
-          <div className={`text-right font-medium ${isPositive ? 'text-earth-forest' : 'text-danger'}`}>
+          <div
+            className={`text-right font-medium ${isPositive ? 'text-earth-forest' : 'text-danger'}`}
+          >
             {isPositive ? '+' : ''}${row.original.totalGain.toFixed(2)}
             <br />
-            <span className="text-xs">({isPositive ? '+' : ''}{row.original.totalGainPercent.toFixed(2)}%)</span>
+            <span className="text-xs">
+              ({isPositive ? '+' : ''}
+              {row.original.totalGainPercent.toFixed(2)}%)
+            </span>
           </div>
         );
       },
@@ -139,7 +155,9 @@ export function PositionsTable({ onSelectStock, onCollapsedChange }: PositionsTa
       accessorKey: 'currentValue',
       header: 'Value',
       cell: ({ row }) => (
-        <span className="text-earth-forest font-medium">${row.original.currentValue.toFixed(2)}</span>
+        <span className="text-earth-forest font-medium">
+          ${row.original.currentValue.toFixed(2)}
+        </span>
       ),
       meta: { align: 'right' },
     },
@@ -154,9 +172,7 @@ export function PositionsTable({ onSelectStock, onCollapsedChange }: PositionsTa
     {
       accessorKey: 'quantity',
       header: 'Qty',
-      cell: ({ row }) => (
-        <span className="text-earth-moss">{row.original.quantity}</span>
-      ),
+      cell: ({ row }) => <span className="text-earth-moss">{row.original.quantity}</span>,
       meta: { align: 'right' },
     },
     {

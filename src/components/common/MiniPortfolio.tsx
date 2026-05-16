@@ -10,10 +10,7 @@ export function MiniPortfolio() {
     return sum + (stock?.currentPrice ?? 0) * holding.quantity;
   }, 0);
 
-  const totalCost = portfolio.reduce(
-    (sum, holding) => sum + holding.avgCost * holding.quantity,
-    0
-  );
+  const totalCost = portfolio.reduce((sum, holding) => sum + holding.avgCost * holding.quantity, 0);
 
   const totalGain = totalValue - totalCost;
   const totalGainPercent = totalCost > 0 ? (totalGain / totalCost) * 100 : 0;
@@ -28,25 +25,18 @@ export function MiniPortfolio() {
       <div className="space-y-1 flex-shrink-0">
         <div className="flex justify-between items-center">
           <span className="text-sm text-earth-moss">Total Value</span>
-          <span className="text-sm font-semibold text-earth-forest">
-            ${totalValue.toFixed(2)}
-          </span>
+          <span className="text-sm font-semibold text-earth-forest">${totalValue.toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-earth-moss">Cash Balance</span>
-          <span className="text-sm font-medium text-earth-forest">
-            ${cashBalance.toFixed(2)}
-          </span>
+          <span className="text-sm font-medium text-earth-forest">${cashBalance.toFixed(2)}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-earth-moss">Total P/L</span>
           <span
-            className={`text-sm font-semibold ${
-              isPositive ? 'text-earth-forest' : 'text-danger'
-            }`}
+            className={`text-sm font-semibold ${isPositive ? 'text-earth-forest' : 'text-danger'}`}
           >
-            {isPositive ? '+' : ''}
-            ${totalGain.toFixed(2)} ({isPositive ? '+' : ''}
+            {isPositive ? '+' : ''}${totalGain.toFixed(2)} ({isPositive ? '+' : ''}
             {totalGainPercent.toFixed(2)}%)
           </span>
         </div>
@@ -65,9 +55,7 @@ export function MiniPortfolio() {
                 const value = currentPrice * holding.quantity;
                 const gain = value - holding.avgCost * holding.quantity;
                 const gainPercent =
-                  holding.avgCost > 0
-                    ? (gain / (holding.avgCost * holding.quantity)) * 100
-                    : 0;
+                  holding.avgCost > 0 ? (gain / (holding.avgCost * holding.quantity)) * 100 : 0;
 
                 return (
                   <div
@@ -83,9 +71,7 @@ export function MiniPortfolio() {
                       </span>
                     </div>
                     <div className="flex justify-between items-center mt-0.5">
-                      <span className="text-xs text-earth-moss">
-                        {holding.quantity} shares
-                      </span>
+                      <span className="text-xs text-earth-moss">{holding.quantity} shares</span>
                       <span
                         className={`text-xs font-medium ${
                           gain >= 0 ? 'text-earth-forest' : 'text-danger'

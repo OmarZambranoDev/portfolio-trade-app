@@ -49,7 +49,9 @@ export function TradeHistoryTable({ onCollapsedChange }: TradeHistoryTableProps)
           ) : (
             <ArrowDownCircle className="w-4 h-4 text-danger" />
           )}
-          <span className={`font-medium ${row.original.action === 'buy' ? 'text-earth-forest' : 'text-danger'}`}>
+          <span
+            className={`font-medium ${row.original.action === 'buy' ? 'text-earth-forest' : 'text-danger'}`}
+          >
             {row.original.action.toUpperCase()}
           </span>
         </div>
@@ -67,17 +69,13 @@ export function TradeHistoryTable({ onCollapsedChange }: TradeHistoryTableProps)
     {
       accessorKey: 'quantity',
       header: 'Qty',
-      cell: ({ row }) => (
-        <span className="text-earth-moss">{row.original.quantity}</span>
-      ),
+      cell: ({ row }) => <span className="text-earth-moss">{row.original.quantity}</span>,
       meta: { align: 'right' },
     },
     {
       accessorKey: 'price',
       header: 'Price',
-      cell: ({ row }) => (
-        <span className="text-earth-moss">${row.original.price.toFixed(2)}</span>
-      ),
+      cell: ({ row }) => <span className="text-earth-moss">${row.original.price.toFixed(2)}</span>,
       meta: { align: 'right' },
     },
     {
@@ -91,9 +89,7 @@ export function TradeHistoryTable({ onCollapsedChange }: TradeHistoryTableProps)
     {
       accessorKey: 'date',
       header: 'Date',
-      cell: ({ row }) => (
-        <span className="text-earth-moss text-xs">{row.original.date}</span>
-      ),
+      cell: ({ row }) => <span className="text-earth-moss text-xs">{row.original.date}</span>,
       meta: { align: 'right' },
     },
   ];

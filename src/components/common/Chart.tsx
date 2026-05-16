@@ -52,7 +52,7 @@ export function Chart() {
   const [chartType, setChartType] = useState<'line' | 'candlestick'>('line');
   const [timeframe, setTimeframe] = useState<Timeframe>('1M');
 
-  const { selectedStock, historical, stocks } = useTradeStore();
+  const { selectedStock, historical, stocks, intraday } = useTradeStore();
 
   const stock = selectedStock ? stocks[selectedStock] : null;
   const isPositive = stock ? stock.change >= 0 : true;
@@ -111,31 +111,26 @@ export function Chart() {
 
   useEffect(() => {
     const chart = chartRef.current;
-    if (!chart) return;
+    if (!chart || !selectedStock) return;
 
     // Safely remove existing series
     try {
-      if (lineSeriesRef.current) {
-        chart.removeSeries(lineSeriesRef.current);
-      }
-    } catch {
-      // Series might already be removed
-    }
+      if (lineSeriesRef.current) chart.removeSeries(lineSeriesRef.current);
+    } catch { /* already removed */ }
     lineSeriesRef.current = null;
 
     try {
-      if (candleSeriesRef.current) {
-        chart.removeSeries(candleSeriesRef.current);
-      }
-    } catch {
-      // Series might already be removed
-    }
+      if (candleSeriesRef.current) chart.removeSeries(candleSeriesRef.current);
+    } catch { /* already removed */ }
     candleSeriesRef.current = null;
 
-    if (!selectedStock || !historical[selectedStock]) return;
+    const dataSource = timeframe === '1D'
+      ? (intraday[selectedStock] || [])
+      : (historical[selectedStock] || []);
 
-    const filteredData = filterDataByTimeframe(historical[selectedStock], timeframe);
+    if (dataSource.length === 0) return;
 
+    const filteredData = filterDataByTimeframe(dataSource, timeframe);
     if (filteredData.length === 0) return;
 
     if (chartType === 'line') {
@@ -172,7 +167,7 @@ export function Chart() {
       candleSeriesRef.current = candleSeries;
       chart.timeScale().fitContent();
     }
-  }, [selectedStock, historical, chartType, timeframe, lineColor]);
+  }, [selectedStock, historical, intraday, chartType, timeframe, lineColor]);
 
   return (
     <div className="h-full flex flex-col">

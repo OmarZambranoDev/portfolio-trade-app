@@ -1,11 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
-import {
-  createChart,
-  IChartApi,
-  ISeriesApi,
-  LineData,
-  Time,
-} from 'lightweight-charts';
+import { createChart, IChartApi, ISeriesApi, LineData, Time } from 'lightweight-charts';
 import { Button } from '@OmarZambranoDev/portfolio-ui';
 import { useTradeStore } from '../../store/tradeStore';
 
@@ -16,14 +10,11 @@ const TIMEFRAME_LABELS: Record<Timeframe, string> = {
   '1W': '1W',
   '1M': '1M',
   '3M': '3M',
-  'YTD': 'YTD',
+  YTD: 'YTD',
   '1Y': '1Y',
 };
 
-function filterDataByTimeframe(
-  data: { time: Time; value: number }[],
-  timeframe: Timeframe
-) {
+function filterDataByTimeframe(data: { time: Time; value: number }[], timeframe: Timeframe) {
   const now = Date.now() / 1000;
 
   if (timeframe === 'YTD') {
@@ -77,8 +68,7 @@ export function PortfolioOverview() {
   const { portfolio, historical, cashBalance } = useTradeStore();
 
   const portfolioData = buildPortfolioHistory(portfolio, historical);
-  const currentValue =
-    portfolioData.length > 0 ? portfolioData[portfolioData.length - 1].value : 0;
+  const currentValue = portfolioData.length > 0 ? portfolioData[portfolioData.length - 1].value : 0;
   const startValue = portfolioData.length > 0 ? portfolioData[0].value : currentValue;
   const totalGain = currentValue - startValue;
   const isPositive = totalGain >= 0;
@@ -175,16 +165,11 @@ export function PortfolioOverview() {
       <div className="flex-shrink-0">
         <h2 className="text-xl font-bold text-earth-forest">Portfolio Overview</h2>
         <div className="flex items-baseline gap-3 mt-1">
-          <span className="text-2xl font-bold text-earth-forest">
-            ${currentValue.toFixed(2)}
-          </span>
+          <span className="text-2xl font-bold text-earth-forest">${currentValue.toFixed(2)}</span>
           <span
-            className={`text-sm font-semibold ${
-              isPositive ? 'text-earth-forest' : 'text-danger'
-            }`}
+            className={`text-sm font-semibold ${isPositive ? 'text-earth-forest' : 'text-danger'}`}
           >
-            {isPositive ? '+' : ''}
-            ${totalGain.toFixed(2)} (
+            {isPositive ? '+' : ''}${totalGain.toFixed(2)} (
             {startValue > 0 ? ((totalGain / startValue) * 100).toFixed(2) : '0.00'}%)
           </span>
         </div>

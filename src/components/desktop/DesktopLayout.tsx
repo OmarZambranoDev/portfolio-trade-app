@@ -38,10 +38,9 @@ export function DesktopLayout() {
             clickable
             onClick={handlePortfolioClick}
             variant={viewMode === 'portfolio' ? 'elevated' : 'outline'}
-            className={`flex-1 flex flex-col min-h-0 overflow-hidden transition-colors ${viewMode === 'portfolio'
-              ? 'border-primary/50 bg-primary/10'
-              : 'border-earth-stone/30'
-              }`}
+            className={`flex-1 flex flex-col min-h-0 overflow-hidden transition-colors ${
+              viewMode === 'portfolio' ? 'border-primary/50 bg-primary/10' : 'border-earth-stone/30'
+            }`}
           >
             <MiniPortfolio />
           </Card>

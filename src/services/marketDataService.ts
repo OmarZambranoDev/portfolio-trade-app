@@ -1,4 +1,4 @@
-import { Stock, HistoricalDataPoint } from '../types';
+import { Stock, HistoricalDataPoint, IntradayDataPoint } from '../types';
 
 const API_BASE = 'https://api.massive.com/v1';
 
@@ -192,6 +192,37 @@ function generateHistoricalData(
   return data;
 }
 
+function generateIntradayData(
+  basePrice: number,
+  volatility: number
+): IntradayDataPoint[] {
+  const data: IntradayDataPoint[] = [];
+  const now = Date.now();
+  const msPerPoint = 15 * 60 * 1000; // 15 minutes
+
+  let price = basePrice;
+  for (let i = 28; i >= 0; i--) {
+    const change = (Math.random() - 0.5) * 2 * volatility * price * 0.3;
+    const open = price;
+    const close = open + change;
+    const high = Math.max(open, close) + Math.random() * volatility * price * 0.1;
+    const low = Math.min(open, close) - Math.random() * volatility * price * 0.1;
+
+    data.push({
+      timestamp: now - i * msPerPoint,
+      open: Math.round(open * 100) / 100,
+      high: Math.round(high * 100) / 100,
+      low: Math.round(low * 100) / 100,
+      close: Math.round(close * 100) / 100,
+      volume: Math.floor(100000 + Math.random() * 500000),
+    });
+
+    price = close;
+  }
+
+  return data;
+}
+
 function computeChange(
   stock: Omit<Stock, 'change' | 'changePercent'>
 ): Pick<Stock, 'change' | 'changePercent'> {
@@ -206,6 +237,7 @@ function computeChange(
 export async function fetchStockData(): Promise<{
   stocks: Stock[];
   historical: Record<string, HistoricalDataPoint[]>;
+  intraday: Record<string, IntradayDataPoint[]>;
 }> {
   const apiKey = import.meta.env.VITE_MASSIVE_API_KEY;
 
@@ -219,7 +251,6 @@ export async function fetchStockData(): Promise<{
       );
       if (response.ok) {
         const json = await response.json();
-        // TODO: Map API response when schema is confirmed
         console.log('API data received:', json);
       }
     } catch {
@@ -227,29 +258,30 @@ export async function fetchStockData(): Promise<{
     }
   }
 
-  // Fallback to mock data
   const stocks: Stock[] = DEFAULT_SYMBOLS.map((symbol) => {
     const mock = MOCK_STOCKS[symbol];
     return { ...mock, ...computeChange(mock) };
   });
 
   const historical: Record<string, HistoricalDataPoint[]> = {};
+  const intraday: Record<string, IntradayDataPoint[]> = {};
+
   DEFAULT_SYMBOLS.forEach((symbol) => {
     const stock = MOCK_STOCKS[symbol];
-    historical[symbol] = generateHistoricalData(stock.currentPrice, VOLATILITY[symbol] || 0.015);
+    historical[symbol] = generateHistoricalData(stock.currentPrice, VOLATILITY[symbol] || 0.015, 365);
+    intraday[symbol] = generateIntradayData(stock.currentPrice, VOLATILITY[symbol] || 0.015);
   });
 
-  // Cache in localStorage
   try {
     localStorage.setItem(
       'trade_seed_data',
-      JSON.stringify({ stocks, historical, timestamp: Date.now() })
+      JSON.stringify({ stocks, historical, intraday, timestamp: Date.now() })
     );
   } catch {
-    // localStorage might be unavailable (e.g., private browsing)
+    // localStorage might be unavailable
   }
 
-  return { stocks, historical };
+  return { stocks, historical, intraday };
 }
 
 export function getVolatility(symbol: string): number {

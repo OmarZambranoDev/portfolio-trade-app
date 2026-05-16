@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Stock, Holding, Trade, HistoricalDataPoint } from '../types';
+import { Stock, Holding, Trade, HistoricalDataPoint, IntradayDataPoint } from '../types';
 import { fetchStockData, getVolatility } from '../services/marketDataService';
 
 interface TradeStore {
   // Data
   stocks: Record<string, Stock>;
   historical: Record<string, HistoricalDataPoint[]>;
+  intraday: Record<string, IntradayDataPoint[]>;
   watchlist: string[];
   portfolio: Holding[];
   cashBalance: number;
@@ -34,6 +35,7 @@ export const useTradeStore = create<TradeStore>()(
     (set, get) => ({
       stocks: {},
       historical: {},
+      intraday: {},
       watchlist: ['AAPL', 'GOOGL', 'MSFT', 'TSLA'],
       portfolio: [
         { symbol: 'AAPL', quantity: 10, avgCost: 150 },
@@ -77,29 +79,29 @@ export const useTradeStore = create<TradeStore>()(
             const parsed = JSON.parse(cached);
             const cacheAge = Date.now() - parsed.timestamp;
             if (cacheAge < 30 * 60 * 1000) {
-              // Cache valid for 30 minutes
               const stocksMap: Record<string, Stock> = {};
               parsed.stocks.forEach((s: Stock) => {
                 stocksMap[s.symbol] = s;
               });
               set({
                 stocks: stocksMap,
-                historical: parsed.historical,
+                historical: parsed.historical || {},
+                intraday: parsed.intraday || {},
                 dataLoaded: true,
               });
               return;
             }
           } catch {
-            // Invalid cache, fetch fresh
+            // Invalid cache
           }
         }
 
-        const { stocks, historical } = await fetchStockData();
+        const { stocks, historical, intraday } = await fetchStockData();
         const stocksMap: Record<string, Stock> = {};
         stocks.forEach((s) => {
           stocksMap[s.symbol] = s;
         });
-        set({ stocks: stocksMap, historical, dataLoaded: true });
+        set({ stocks: stocksMap, historical, intraday, dataLoaded: true });
       },
 
       addToWatchlist: (symbol) => {

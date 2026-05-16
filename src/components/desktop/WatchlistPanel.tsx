@@ -137,10 +137,11 @@ export function WatchlistPanel({ onSelectStock }: WatchlistPanelProps) {
                       onSelectStock();
                     }}
                     variant={isSelected ? 'elevated' : 'outline'}
-                    className={`transition-colors ${isSelected
-                      ? 'border-primary/50 bg-primary/10'
-                      : 'border-earth-stone/30 hover:bg-earth-stone/20'
-                      }`}
+                    className={`transition-colors ${
+                      isSelected
+                        ? 'border-primary/50 bg-primary/10'
+                        : 'border-earth-stone/30 hover:bg-earth-stone/20'
+                    }`}
                   >
                     <CardContent className="flex items-center justify-between p-3">
                       <div className="min-w-0 flex-1">
@@ -159,8 +160,9 @@ export function WatchlistPanel({ onSelectStock }: WatchlistPanelProps) {
                               <TrendingDown className="w-3 h-3 text-danger" />
                             )}
                             <p
-                              className={`text-xs font-medium ${isPositive ? 'text-earth-forest' : 'text-danger'
-                                }`}
+                              className={`text-xs font-medium ${
+                                isPositive ? 'text-earth-forest' : 'text-danger'
+                              }`}
                             >
                               {stock.changePercent > 0 ? '+' : ''}
                               {stock.changePercent.toFixed(2)}%

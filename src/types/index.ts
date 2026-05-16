@@ -32,3 +32,5 @@ export interface HistoricalDataPoint {
   close: number;
   volume: number;
 }
+
+export type IntradayDataPoint = HistoricalDataPoint;
